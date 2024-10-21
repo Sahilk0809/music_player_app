@@ -69,8 +69,8 @@ class _MusicScreenState extends State<MusicScreen> {
                   color: black1,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(providerTrue
-                        .audioList[providerTrue.selectedIndex].image),
+                    image: NetworkImage(providerTrue.musicModal!.data
+                        .result[providerTrue.selectedIndex].image[2].url),
                   ),
                 ),
               ),
@@ -78,14 +78,17 @@ class _MusicScreenState extends State<MusicScreen> {
                 height: height * 0.025,
               ),
               Text(
-                providerTrue.audioList[providerTrue.selectedIndex].name,
+                providerTrue
+                    .musicModal!.data.result[providerTrue.selectedIndex].name,
                 style: const TextStyle(
+                  overflow: TextOverflow.ellipsis,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                providerTrue.audioList[providerTrue.selectedIndex].artist,
+                providerTrue.musicModal!.data.result[providerTrue.selectedIndex]
+                    .album.name,
                 style: const TextStyle(
                   fontSize: 20,
                   overflow: TextOverflow.ellipsis,
@@ -152,6 +155,7 @@ class _MusicScreenState extends State<MusicScreen> {
                   value: value.positionOfTheSlider()!.inSeconds.toDouble(),
                   max: value.durationOfTheTimer()!.inSeconds.toDouble(),
                   activeColor: Colors.white,
+                  inactiveColor: Colors.white.withOpacity(0.2),
                   onChanged: (value) {
                     value = value;
                     providerFalse.changeToSeconds(value.toInt());
@@ -281,14 +285,17 @@ class _MusicScreenState extends State<MusicScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
-                                  image: AssetImage(providerTrue
-                                      .audioList[providerTrue.selectedIndex]
-                                      .image),
+                                  image: NetworkImage(providerTrue
+                                      .musicModal!
+                                      .data
+                                      .result[providerTrue.selectedIndex]
+                                      .image[2]
+                                      .url),
                                 ),
                               ),
                             ),
-                            title: Text(providerTrue
-                                .audioList[providerTrue.selectedIndex].name),
+                            title: Text(providerTrue.musicModal!.data
+                                .result[providerTrue.selectedIndex].name),
                             subtitle: const Text('Playing'),
                           ),
                         ],

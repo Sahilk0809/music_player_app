@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player_app/helper/api_helper.dart';
 import 'package:music_player_app/modal/music_modal.dart';
-import 'package:music_player_app/utils/list.dart';
 
 class MusicProvider extends ChangeNotifier {
   List<MusicModal> audioList = []; // list musics
@@ -55,14 +55,16 @@ class MusicProvider extends ChangeNotifier {
   // forwarding song
   void forwardSong() {
     selectedIndex = selectedIndex + 1;
-    audioPlayer.setAsset(audioList[selectedIndex].audio);
+    audioPlayer
+        .setUrl(musicModal!.data.result[selectedIndex].downloadUrl.first.url);
     notifyListeners();
   }
 
   // reversing the song
   void backSong() {
     selectedIndex = selectedIndex - 1;
-    audioPlayer.setAsset(audioList[selectedIndex].audio);
+    audioPlayer
+        .setUrl(musicModal!.data.result[selectedIndex].downloadUrl.first.url);
     notifyListeners();
   }
 
@@ -78,18 +80,28 @@ class MusicProvider extends ChangeNotifier {
   }
 
   // the list of map to list of object
-  void listOfObject(List l1) {
-    for (int i = 0; i < l1.length; i++) {
-      audioList.add(MusicModal.fromMap(l1[i]));
-    }
+  // void listOfObject(List l1) {
+  //   for (int i = 0; i < l1.length; i++) {
+  //     audioList.add(MusicModal.fromMap(l1[i]));
+  //   }
+  // }
+
+  ApiHelper apiHelper = ApiHelper();
+  MusicModal? musicModal;
+
+  Future<MusicModal?> fetchApiData(String value) async {
+    final data = await apiHelper.fetchApi(value);
+    musicModal = MusicModal.fromMap(data);
+    return musicModal;
   }
 
-  void addingFavouriteSongs(){
+  void addingFavouriteSongs() {
     favouriteList.add(audioList[selectedIndex]);
     notifyListeners();
   }
 
   MusicProvider() {
-    listOfObject(musicList);
+    // listOfObject(musicList);
+    fetchApiData('Farmaish');
   }
 }
