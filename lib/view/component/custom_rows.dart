@@ -24,6 +24,7 @@ class CustomRows extends StatelessWidget {
           style: TextStyle(
             color: green,
             letterSpacing: 1.5,
+            
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
