@@ -33,6 +33,7 @@ class CustomRows extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
+
             children: List.generate(
               providerTrue.musicModal!.data.result.length,
               (index) => GestureDetector(
