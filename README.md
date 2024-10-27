@@ -1,5 +1,7 @@
 # music_player_app
 
+## Description
+
 <img src="https://github.com/user-attachments/assets/1c4a82b5-b28f-44fe-8b30-db01094c405f" height=65% width=22%>
 <img src="https://github.com/user-attachments/assets/fe0331c9-b031-4d29-8b02-e3a1794e6970" height=65% width=22%>
 <img src="https://github.com/user-attachments/assets/2c765361-a26b-4859-a6ac-e0c234692efb" height=65% width=22%>
