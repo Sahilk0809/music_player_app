@@ -1,16 +1,9 @@
 # music_player_app
 
-A new Flutter project.
+## Description
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="https://github.com/user-attachments/assets/1c4a82b5-b28f-44fe-8b30-db01094c405f" height=65% width=22%>
+<img src="https://github.com/user-attachments/assets/fe0331c9-b031-4d29-8b02-e3a1794e6970" height=65% width=22%>
+<img src="https://github.com/user-attachments/assets/2c765361-a26b-4859-a6ac-e0c234692efb" height=65% width=22%>
+<img src="https://github.com/user-attachments/assets/c86d8a06-84c0-4b92-a400-68a9faa942ef" height=65% width=22%>
+<img src="https://github.com/user-attachments/assets/6c912aba-ec6c-4c1c-9214-a4d546d0210d" height=65% width=22%>
