@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:music_player_app/provider/music_provider.dart';
+import 'package:music_player_app/view/component/custom_bottom_navigation_bar.dart';
 import 'package:music_player_app/view/component/custom_rows.dart';
 import 'package:music_player_app/view/component/my_drawer.dart';
+import 'package:music_player_app/view/component/shimmer_effect.dart';
+import 'package:music_player_app/view/search_screen.dart';
 import 'package:provider/provider.dart';
-
 import '../utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,123 +16,235 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>(); // GlobalKey to manage the drawer
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getObject();
+  }
 
+  // GlobalKey to manage the drawer
   @override
   Widget build(BuildContext context) {
     // instance of the provider
     final providerTrue = Provider.of<MusicProvider>(context);
     final providerFalse = Provider.of<MusicProvider>(context, listen: false);
     var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      key: _scaffoldKey, // Assign the key to Scaffold
       drawer: const MyDrawer(),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [black1, black2],
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: height * 0.05,
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [black1, black2],
               ),
-              GestureDetector(
-                onTap: () {
-                  // opening drawer
-                  _scaffoldKey.currentState!.openDrawer();
-                },
-                child: const Icon(Icons.menu, size: 30, color: Colors.white),
-              ),
-              SizedBox(height: height * 0.02),
-              Text(
-                'Hi There,',
-                style: TextStyle(
-                  color: green,
-                  letterSpacing: 1.5,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text(
-                'Sahil',
-                style: TextStyle(
-                  letterSpacing: 1.5,
-                  fontSize: 22,
-                ),
-              ),
-              SizedBox(height: height * 0.03),
-              TextField(
-                cursorColor: green,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: green,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: height * 0.05,
                   ),
-                  hintText: 'Songs, albums or artists',
-                  hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.1),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              SizedBox(height: height * 0.03),
-              FutureBuilder(
-                future: providerFalse.fetchApiData('a'),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text(snapshot.error.toString()),
+                  Builder(builder: (context) {
+                    return GestureDetector(
+                      onTap: () {
+                        // opening drawer
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child:
+                          const Icon(Icons.menu, size: 30, color: Colors.white),
                     );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+                  }),
+                  SizedBox(height: height * 0.02),
+                  Text(
+                    'Hi There,',
+                    style: TextStyle(
+                      color: green,
+                      letterSpacing: 1.5,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Text(
+                    'Sahil',
+                    style: TextStyle(
+                      letterSpacing: 1.5,
+                      fontSize: 22,
+                    ),
+                  ),
+                  SizedBox(height: height * 0.03),
+                  // MyTextField(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const SearchScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   prefixIcon: Icon(
+                  //     Icons.search,
+                  //     color: green,
+                  //   ),
+                  // ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SearchScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: height * 0.065,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: green,
+                          ),
+                          SizedBox(
+                            width: height * 0.01,
+                          ),
+                          Text(
+                            'Songs, albums or artists',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white.withOpacity(0.4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.03),
+                  FutureBuilder(
+                    future: providerFalse.fetchApiData("Arijit"),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CustomRows(
+                          text: 'Trending Now',
+                          result: providerTrue.artistData!.data.result,
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            snapshot.error.toString(),
+                          ),
+                        );
+                      } else {
+                        return const ShimmerEffect();
+                      }
+                    },
+                  ),
 
-                  return const CustomRows(
-                    text: 'Trending Now',
-                  );
-                },
+                  SizedBox(height: height * 0.03),
+                  FutureBuilder(
+                    future: providerFalse.fetchPunjabiApiData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CustomRows(
+                          text: 'Punjabi Hits',
+                          result: providerTrue.punjabiSongs!.data.result,
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      } else {
+                        return const ShimmerEffect();
+                      }
+                    },
+                  ),
+                  SizedBox(height: height * 0.03),
+                  FutureBuilder(
+                    future: providerFalse.fetchHindi(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CustomRows(
+                          text: 'Hindi Hits',
+                          result: providerTrue.hindiSongs!.data.result,
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      } else {
+                        return const ShimmerEffect();
+                      }
+                    },
+                  ),
+                  SizedBox(height: height * 0.03),
+                  FutureBuilder(
+                    future: providerFalse.fetchHaryanaApiData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CustomRows(
+                          text: 'Haryanvi Hits',
+                          result: providerTrue.haryanaSongs!.data.result,
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      } else {
+                        return const ShimmerEffect();
+                      }
+                    },
+                  ),
+                  SizedBox(height: height * 0.03),
+                  FutureBuilder(
+                    future: providerFalse.fetchTopApiData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CustomRows(
+                          text: 'Lofi Songs',
+                          result: providerTrue.topData!.data.result,
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text(snapshot.error.toString()),
+                        );
+                      } else {
+                        return const ShimmerEffect();
+                      }
+                    },
+                  ),
+                ],
               ),
-              SizedBox(height: height * 0.03),
-              FutureBuilder(
-                future: providerFalse.fetchApiData('b'),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text(snapshot.error.toString()),
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Text('');
-                  }
-
-                  return const CustomRows(
-                    text: 'Top Charts',
-                  );
-                },
-              ),
-              SizedBox(height: height * 0.03),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
+  }
+
+  Future<void> getObject() async {
+    var provider = Provider.of<MusicProvider>(context, listen: false);
+    provider.artistData = await provider.fetchApiData("Arijit");
+    provider.topData = await provider.fetchTopApiData();
+    provider.punjabiSongs = await provider.fetchPunjabiApiData();
+    provider.hindiSongs = await provider.fetchPunjabiApiData();
+    provider.haryanaSongs = await provider.fetchPunjabiApiData();
   }
 }

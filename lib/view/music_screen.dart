@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/modal/music_modal.dart';
 import 'package:provider/provider.dart';
 import '../provider/music_provider.dart';
 import '../utils/colors.dart';
 
-class MusicScreen extends StatefulWidget {
-  const MusicScreen({super.key});
+class MusicScreen extends StatelessWidget {
+  final List<Result> result;
 
-  @override
-  State<MusicScreen> createState() => _MusicScreenState();
-}
+  const MusicScreen({super.key, required this.result});
 
-class _MusicScreenState extends State<MusicScreen> {
   @override
   Widget build(BuildContext context) {
     final providerTrue = Provider.of<MusicProvider>(context);
@@ -35,7 +33,7 @@ class _MusicScreenState extends State<MusicScreen> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.of(context).pop();
                     },
                     icon: const Icon(Icons.keyboard_arrow_down),
                   ),
@@ -69,8 +67,8 @@ class _MusicScreenState extends State<MusicScreen> {
                   color: black1,
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(providerTrue.musicModal!.data
-                        .result[providerTrue.selectedIndex].image[2].url),
+                    image: NetworkImage(
+                        result[providerTrue.selectedIndex].image[2].url),
                   ),
                 ),
               ),
@@ -78,8 +76,7 @@ class _MusicScreenState extends State<MusicScreen> {
                 height: height * 0.025,
               ),
               Text(
-                providerTrue
-                    .musicModal!.data.result[providerTrue.selectedIndex].name,
+                result[providerTrue.selectedIndex].name,
                 style: const TextStyle(
                   overflow: TextOverflow.ellipsis,
                   fontSize: 30,
@@ -87,8 +84,7 @@ class _MusicScreenState extends State<MusicScreen> {
                 ),
               ),
               Text(
-                providerTrue.musicModal!.data.result[providerTrue.selectedIndex]
-                    .album.name,
+                result[providerTrue.selectedIndex].album.name,
                 style: const TextStyle(
                   fontSize: 20,
                   overflow: TextOverflow.ellipsis,
@@ -193,7 +189,9 @@ class _MusicScreenState extends State<MusicScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      providerFalse.backSong();
+                      if (providerTrue.selectedIndex > 0) {
+                        providerFalse.backSong(result);
+                      }
                     },
                     icon: const Icon(
                       Icons.skip_previous,
@@ -216,7 +214,9 @@ class _MusicScreenState extends State<MusicScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      providerFalse.forwardSong();
+                      if (providerTrue.selectedIndex < 10) {
+                        providerFalse.forwardSong(result);
+                      }
                     },
                     icon: const Icon(
                       Icons.skip_next,
@@ -228,7 +228,7 @@ class _MusicScreenState extends State<MusicScreen> {
                   ),
                   const IconButton(
                     onPressed: null,
-                    icon: Icon(Icons.shuffle),
+                    icon: Icon(Icons.swap_calls),
                   ),
                 ],
               ),
@@ -237,7 +237,7 @@ class _MusicScreenState extends State<MusicScreen> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      providerFalse.addingFavouriteSongs();
+                      providerFalse.addingFavouriteSongs(result, context);
                     },
                     icon: const Icon(Icons.favorite_border_outlined),
                   ),
@@ -285,17 +285,15 @@ class _MusicScreenState extends State<MusicScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
-                                  image: NetworkImage(providerTrue
-                                      .musicModal!
-                                      .data
-                                      .result[providerTrue.selectedIndex]
-                                      .image[2]
-                                      .url),
+                                  image: NetworkImage(
+                                      result[providerTrue.selectedIndex]
+                                          .image[2]
+                                          .url),
                                 ),
                               ),
                             ),
-                            title: Text(providerTrue.musicModal!.data
-                                .result[providerTrue.selectedIndex].name),
+                            title:
+                                Text(result[providerTrue.selectedIndex].name),
                             subtitle: const Text('Playing'),
                           ),
                         ],

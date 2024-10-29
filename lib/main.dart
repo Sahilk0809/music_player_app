@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:music_player_app/provider/music_provider.dart';
-import 'package:music_player_app/view/home_screen.dart';
+import 'package:music_player_app/view/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         colorScheme: const ColorScheme.dark(
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           primary: Colors.white,
         ),
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }

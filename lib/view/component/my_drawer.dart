@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player_app/utils/colors.dart';
 import 'package:music_player_app/view/about_screen.dart';
+import 'package:music_player_app/view/favourite_screen.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -36,7 +37,13 @@ class MyDrawer extends StatelessWidget {
             _createDrawerItem(
               icon: Icons.music_note,
               text: 'My Music',
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FavouriteScreen(),
+                  ),
+                );
+              },
             ),
             _createDrawerItem(
               icon: Icons.download,
@@ -67,7 +74,7 @@ class MyDrawer extends StatelessWidget {
             ),
             const Spacer(),
             const Text(
-              'Made with ❤️ by Ankit Sangwan',
+              'Made with ❤️ by Sahil Kashyap',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white),
             ),

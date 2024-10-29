@@ -4,17 +4,31 @@ import 'package:music_player_app/helper/api_helper.dart';
 import 'package:music_player_app/modal/music_modal.dart';
 
 class MusicProvider extends ChangeNotifier {
-  List<MusicModal> audioList = []; // list musics
   int selectedIndex = 0; // index selected by he user
 
   final audioPlayer = AudioPlayer(); // instance of audio player
   bool isPlay = false; // is music is playing or not
 
-  Duration? position; // current position of the music
-  Duration? duration; // duration of the music
+  Duration? position = Duration.zero; // current position of the music
+  Duration? duration = Duration.zero; // duration of the music
   double speed = 1.0; // speed of the music
 
-  List<MusicModal> favouriteList = []; // favourite music list
+  List<Result> favouriteList = []; // favourite music list
+
+  MusicModal? searchList; // adding the data searched by user
+
+  ApiHelper apiHelper = ApiHelper(); // helper class instance
+
+  bool isMiniPlayer = false;
+
+  List<Result> miniPlayerResult = [];
+
+  // variables to store different categories songs
+  MusicModal? artistData;
+  MusicModal? punjabiSongs;
+  MusicModal? hindiSongs;
+  MusicModal? haryanaSongs;
+  MusicModal? topData;
 
   // current position of the current music
   Duration? positionOfTheSlider() {
@@ -38,43 +52,46 @@ class MusicProvider extends ChangeNotifier {
     return duration;
   }
 
+  void toggleMiniPlayer(){
+    isMiniPlayer = !isMiniPlayer;
+    notifyListeners();
+  }
+
   // changing the position to seconds
-  void changeToSeconds(int seconds) {
+  Future<void> changeToSeconds(int seconds) async {
     Duration duration = Duration(seconds: seconds);
-    audioPlayer.seek(duration);
+    await audioPlayer.seek(duration);
     notifyListeners();
   }
 
   // toggling the speed of the music
-  void toggleSpeed(double value) {
+  Future<void> toggleSpeed(double value) async {
     speed = value;
-    audioPlayer.setSpeed(speed);
+    await audioPlayer.setSpeed(speed);
     notifyListeners();
   }
 
   // forwarding song
-  void forwardSong() {
+  Future<void> forwardSong(List<Result> result) async {
     selectedIndex = selectedIndex + 1;
-    audioPlayer
-        .setUrl(musicModal!.data.result[selectedIndex].downloadUrl.first.url);
+    await audioPlayer.setUrl(result[selectedIndex].downloadUrl.first.url);
     notifyListeners();
   }
 
   // reversing the song
-  void backSong() {
+  Future<void> backSong(List<Result> result) async {
     selectedIndex = selectedIndex - 1;
-    audioPlayer
-        .setUrl(musicModal!.data.result[selectedIndex].downloadUrl.first.url);
+    await audioPlayer.setUrl(result[selectedIndex].downloadUrl.first.url);
     notifyListeners();
   }
 
   // toggling the between play and pause
-  void togglePlay() {
+  Future<void> togglePlay() async {
     isPlay = !isPlay;
     if (isPlay) {
-      audioPlayer.play();
+      await audioPlayer.play();
     } else {
-      audioPlayer.pause();
+      await audioPlayer.pause();
     }
     notifyListeners();
   }
@@ -86,22 +103,74 @@ class MusicProvider extends ChangeNotifier {
   //   }
   // }
 
-  ApiHelper apiHelper = ApiHelper();
-  MusicModal? musicModal;
-
   Future<MusicModal?> fetchApiData(String value) async {
     final data = await apiHelper.fetchApi(value);
-    musicModal = MusicModal.fromMap(data);
-    return musicModal;
+    artistData = MusicModal.fromMap(data);
+    return artistData;
   }
 
-  void addingFavouriteSongs() {
-    favouriteList.add(audioList[selectedIndex]);
+  Future<MusicModal?> fetchPunjabiApiData() async {
+    final data = await apiHelper.fetchPunjabiApi("Punjabi");
+    punjabiSongs = MusicModal.fromMap(data);
+    return punjabiSongs;
+  }
+
+  Future<MusicModal?> fetchHaryanaApiData() async {
+    final data = await apiHelper.fetchPunjabiApi("Haryanvi");
+    haryanaSongs = MusicModal.fromMap(data);
+    return haryanaSongs;
+  }
+
+  Future<MusicModal?> fetchHindi() async {
+    final data = await apiHelper.fetchPunjabiApi("Bollywood");
+    hindiSongs = MusicModal.fromMap(data);
+    return hindiSongs;
+  }
+
+  Future<MusicModal?> fetchTopApiData() async {
+    final data = await apiHelper.fetchTopApi("Lofi");
+    topData = MusicModal.fromMap(data);
+    return topData;
+  }
+
+  Future<MusicModal?> fetchSearchApiData(String value) async {
+    final data = await apiHelper.fetchSearchApi(value);
+    searchList = MusicModal.fromMap(data);
+    return searchList;
+  }
+
+  String search = 'Jass';
+
+  Future<void> searchData(String value) async {
+    search = value;
+    await fetchSearchApiData(search);
+    notifyListeners();
+  }
+
+  void addingFavouriteSongs(List<Result> result, BuildContext context) {
+    if (!favouriteList.contains(result[selectedIndex])) {
+      favouriteList.add(result[selectedIndex]);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Music Added to My Music'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Music already added'),
+        ),
+      );
+    }
     notifyListeners();
   }
 
   MusicProvider() {
-    // listOfObject(musicList);
-    fetchApiData('Farmaish');
+    positionOfTheSlider();
+    durationOfTheTimer();
+    fetchApiData('Arijit');
+    fetchPunjabiApiData();
+    fetchSearchApiData("Jass");
+    fetchTopApiData();
   }
 }

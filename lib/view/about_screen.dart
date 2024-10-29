@@ -129,7 +129,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const Spacer(),
             const Text(
-              'Made with ❤️ by Ankit Sangwan',
+              'Made with ❤️ by Sahil Kashyap',
               style: TextStyle(
                 color: Colors.grey,
                 fontSize: 16,

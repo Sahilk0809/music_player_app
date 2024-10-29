@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/modal/music_modal.dart';
 import 'package:music_player_app/provider/music_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -7,8 +8,9 @@ import '../music_screen.dart';
 
 class CustomRows extends StatelessWidget {
   final String text;
+  final List<Result> result;
 
-  const CustomRows({super.key, required this.text});
+  const CustomRows({super.key, required this.text, required this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -33,24 +35,23 @@ class CustomRows extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-
             children: List.generate(
-              providerTrue.musicModal!.data.result.length,
+              result.length,
               (index) => GestureDetector(
                 onTap: () async {
                   // passing current index to selectedIndex
                   providerTrue.selectedIndex = index;
 
                   // setting the path of the music to the audioPlayer which user selected
-                  await providerTrue.audioPlayer.setUrl(providerTrue
-                      .musicModal!.data.result[index].downloadUrl.first.url);
-                  // Provider.of<MusicProvider>(context).audioPlayer.play();
-                  // Provider.of<MusicProvider>(context, listen: false).togglePlay();
-                  providerFalse.togglePlay();
-                  Navigator.push(
-                    context,
+                  await providerTrue.audioPlayer
+                      .setUrl(result[index].downloadUrl[3].url);
+                  providerTrue.miniPlayerResult = result;
+                  providerFalse.toggleMiniPlayer();
+                  providerFalse
+                      .togglePlay(); // Ensure play is toggled before navigation.
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const MusicScreen(),
+                      builder: (context) => MusicScreen(result: result),
                     ),
                   );
                 },
@@ -67,8 +68,7 @@ class CustomRows extends StatelessWidget {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            providerTrue
-                                .musicModal!.data.result[index].image[2].url,
+                            result[index].image[2].url,
                           ),
                         ),
                       ),
@@ -79,7 +79,7 @@ class CustomRows extends StatelessWidget {
                     SizedBox(
                       width: width * 0.3,
                       child: Text(
-                        providerTrue.musicModal!.data.result[index].name,
+                        result[index].name,
                         style: const TextStyle(
                           fontSize: 17,
                           overflow: TextOverflow.ellipsis,
